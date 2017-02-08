@@ -1,0 +1,44 @@
+{
+  "name": "name-contests-api",
+  "version": "1.0.0",
+  "description": "Name contests API",
+  "author": "Alexis Villega Torres",
+  "license": "ISC",
+  "scripts": {
+    "start": "node lib/index",
+    "sample1": "babel-node lib/index {hello}",
+    "dev": "babel-watch lib/index"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "graphql"
+  ],
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "dependencies": {
+    "express": "^4.14.1",
+    "express-graphql": "^0.6.3",
+    "graphql": "^0.9.1",
+    "mongodb": "^2.1.18",
+    "pg": "^6.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-transform-async-to-generator": "^6.22.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.22.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-watch": "^2.0.6",
+    "eslint": "^3.14.1",
+    "eslint-plugin-flowtype": "^2.30.0",
+    "express-graphql": "^0.6.3",
+    "flow-bin": "^0.38.0",
+    "humps": "^2.0.0",
+    "nodemon": "^1.9.2"
+  }
+}
