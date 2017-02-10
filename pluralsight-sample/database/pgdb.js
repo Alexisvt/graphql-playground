@@ -46,14 +46,14 @@ export default (pgPool: Object) => {
       return orderedFor(res.rows, nameIds, 'nameId', true);
     },
     async addNewContest({apiKey, title, description}) {
-      const res = await pgPool.query(`
+      return pgPool.query(`
         insert into contests(code, title, description, created_by)
         values ($1, $2, $3,
           (select id from users where api_key = $4))
         returning *
-      `, [slug(title), title, description, apiKey]);
-
-      return camelizeKeys(res.rows[0]);
+      `, [slug(title), title, description, apiKey]).then(res => {
+        return camelizeKeys(res.rows[0]);
+      });
     }
 
   };
