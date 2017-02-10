@@ -1,11 +1,10 @@
 // @flow
 import { GraphQLObjectType, GraphQLID, GraphQLNonNull, GraphQLString, GraphQLList } from 'graphql';
 import ContestStatusType from './contest-status';
-import pgdb from '../../database/pgdb';
 import NameType from './name';
 
 export default new GraphQLObjectType({
-  name: 'ContestType',
+  name: 'Contest',
   fields: {
     id: { type: GraphQLID },
     code: { type: new GraphQLNonNull(GraphQLString) },
@@ -15,8 +14,8 @@ export default new GraphQLObjectType({
     status: { type: new GraphQLNonNull(ContestStatusType) },
     names: {
       type: new GraphQLList(NameType),
-      resolve(obj, args, {pgPool}) {
-        return pgdb(pgPool).getNames(obj);
+      resolve(obj, args, {loaders}) {
+        return loaders.namesForContestIds.load(obj.id);
       }
     }
   }

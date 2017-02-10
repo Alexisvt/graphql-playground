@@ -1,7 +1,12 @@
-export default mPool => ({
-  async getCounts(user: Object, countsField: string) {
-    const userCounts = await mPool.collection('users').findOne({ userId: user.id });
+import { orderedFor } from '../lib/util';
 
-    return userCounts[countsField];
+export default mPool => ({
+  async getUsersByIDs(userIds: number[]) {
+
+    const rows = await mPool.collection('users')
+      .find({ userId: { $in: userIds } })
+      .toArray();
+    
+    return orderedFor(rows, userIds, 'userId', true);
   }
 });

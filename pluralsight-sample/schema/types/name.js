@@ -1,10 +1,10 @@
 // @flow
 import { GraphQLID, GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
 import UserType from './user';
-import pgdb from '../../database/pgdb';
+import TotalVotes from './total-votes';
 
 export default new GraphQLObjectType({
-  name: 'NameType',
+  name: 'Name',
   fields: () => {
     return {
       id: { type: GraphQLID },
@@ -13,8 +13,14 @@ export default new GraphQLObjectType({
       createdAt: { type: new GraphQLNonNull(GraphQLString) },
       createdBy: {
         type: new GraphQLNonNull(UserType),
-        resolve(obj, args, {pgPool}) {
-          return pgdb(pgPool).getUserById(obj.createdBy);
+        resolve(obj, args, {loaders}) {
+          return loaders.usersByIds.load(obj.createdBy);
+        }
+      },
+      totalVotes: {
+        type: TotalVotes,
+        resolve(obj, args, { loaders }) {
+          return loaders.totalVotesByNameIds.load(obj.id);
         }
       }
     };

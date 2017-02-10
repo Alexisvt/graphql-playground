@@ -1,9 +1,7 @@
 // @flow
-
 import { GraphQLNonNull, GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql';
-
 import UserType from './types/user';
-import pgdb from '../database/pgdb';
+import AddContestMutation from './mutations/add-contest';
 
 // The root query type is where in the data graph
 // we can start asking questions
@@ -16,16 +14,23 @@ const RootQueryType = new GraphQLObjectType({
       args: {
         key: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve: (obj, args, {pgPool}) => {
-        return pgdb(pgPool).getUserByApiKey(args.key);
+      resolve: (obj, args, {loaders}) => {
+        return loaders.usersByApiKeys.load(args.key);
       }
     }
   }
 });
 
+const RootMutationType = new GraphQLObjectType({
+  name: 'RootMutationType',
+  fields: () => ({
+    AddContest: AddContestMutation
+  })
+});
+
 const ncSchema = new GraphQLSchema({
-  query: RootQueryType
-  // mutation
+  query: RootQueryType,
+  mutation: RootMutationType
 });
 
 export default ncSchema;
