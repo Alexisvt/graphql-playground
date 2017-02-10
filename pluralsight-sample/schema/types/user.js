@@ -2,6 +2,7 @@
 
 import { GraphQLID, GraphQLNonNull, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLInt } from 'graphql';
 import ContestType from './contest';
+import ActivityType from './activity';
 
 export default new GraphQLObjectType({
   name: 'User',
@@ -44,5 +45,11 @@ export default new GraphQLObjectType({
         return loaders.contestsForUserIds.load(obj.id);
       }
     },
+    activities: {
+      type: new GraphQLList(ActivityType),
+      resolve(obj, args, {loaders}) {
+        return loaders.activitiesForUsersIds.load(obj.id);
+      }
+    }
   }
 });

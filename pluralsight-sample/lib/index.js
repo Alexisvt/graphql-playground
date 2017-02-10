@@ -36,7 +36,8 @@ MongoClient.connect(mconfig.url, (err, mPool) => {
       totalVotesByNameIds: new DataLoader(pgdb.getTotalVotesByNameIds),
       mdb: {
         usersByIds: new DataLoader(mgdb.getUsersByIDs)
-      }
+      },
+      activitiesForUsersIds: new DataLoader(pgdb.getActivitiesForUserIds)
     };
 
     graphqlHTTP({
