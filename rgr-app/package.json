@@ -1,0 +1,35 @@
+{
+  "name": "rgr-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm-run-all --parallel build serve",
+    "build": "webpack",
+    "serve": "babel-watch server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-async-to-generator": "^6.22.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.22.0",
+    "express": "^4.14.1",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "webpack": "^2.2.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "babel-preset-react": "^6.22.0",
+    "babel-watch": "^2.0.6",
+    "eslint": "^3.15.0",
+    "eslint-plugin-flowtype": "^2.30.0",
+    "eslint-plugin-react": "^6.9.0",
+    "flow-bin": "^0.39.0",
+    "npm-run-all": "^4.0.1",
+    "onchange": "^3.2.1"
+  }
+}
