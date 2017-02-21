@@ -7,10 +7,11 @@
         "node": true
     },
     "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:flowtype/recommended"
+        "eslint:recommended"
     ],
+    "settings": {
+        "import/resolver": "node"
+    },
     "parserOptions": {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
@@ -19,8 +20,7 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react",
-        "flowtype"
+        "react"
     ],
     "rules": {
         "indent": [
