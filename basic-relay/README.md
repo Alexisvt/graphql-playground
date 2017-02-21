@@ -4,6 +4,8 @@ Define an app to work with Relay, React and GraphQL.
 
 ## TODO
 
+[x] Define MongoDB js file to populate DB with sample data
+[ ] Setting up NodeJS server
 [ ] Configure a GraphQL server
 [ ] Build a simple TODO app with React
 [ ] Configure Webpack to transpile jsx and reload the server everytime that React files changes
