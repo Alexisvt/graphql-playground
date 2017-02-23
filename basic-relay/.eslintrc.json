@@ -7,7 +7,10 @@
         "node": true
     },
     "extends": [
-        "eslint:recommended"
+        "eslint:recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:flowtype/recommended"
     ],
     "settings": {
         "import/resolver": "node"
@@ -20,7 +23,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "flowtype"
     ],
     "rules": {
         "indent": [
@@ -42,6 +46,7 @@
             "error",
             "always"
         ],
-        "no-console": "off"
+        "no-console": "off",
+        "flowtype/require-parameter-type": "off"
     }
 }

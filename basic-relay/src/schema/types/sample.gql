@@ -1,0 +1,15 @@
+interface ITodo {
+    taskId: String
+    name: String
+    isComplete: Boolean
+  }
+
+  type Todo implements ITodo {
+    taskId: String
+    name: String
+    isComplete: Boolean
+  }
+
+  type Query {
+    todos(todoIdList: [String]): [Todo]
+  }
