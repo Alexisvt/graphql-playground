@@ -24,7 +24,8 @@
     },
     "plugins": [
         "react",
-        "flowtype"
+        "flowtype",
+        "graphql"
     ],
     "rules": {
         "indent": [
@@ -46,7 +47,7 @@
             "error",
             "always"
         ],
-        "no-console": "off",
+        "no-console": "warn",
         "flowtype/require-parameter-type": "off"
     }
 }

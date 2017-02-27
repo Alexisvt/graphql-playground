@@ -4,12 +4,15 @@ Define an app to work with Relay, React and GraphQL.
 
 ## TODO
 
-[x] Define MongoDB js file to populate DB with sample data
-[x] Setting up NodeJS server
-[x] Configure a GraphQL server
-[ ] Build a simple TODO app with React
-[ ] Configure Webpack to transpile jsx and reload the server everytime that React files changes
-[ ] Configure Webpack to generate a schema.json file everytime that the GraphQL schema files change
-[ ] Install and configure ESLint plugin that checks tagged template strings against a GraphQL schema
-[x] Add jsconfig.json file to allow VSCode to give autocompletation when it can
-[ ] Explain Project Scaffolding
+- [x] Define MongoDB js file to populate DB with sample data
+- [x] Setting up NodeJS server
+- [ ] Configure a GraphQL server and Schema to query and mutate the data
+- [ ] Configure tooling: [babel-plugin-react-relay](https://github.com/graphcool/babel-plugin-react-relay)
+- [ ] Build a client side TODO app with React and Relay
+- [ ] Configure Webpack to transpile jsx and reload the server everytime that React files changes
+- [ ] Configure Webpack to generate a schema.json file everytime that the GraphQL schema files change
+- [ ] Install and configure ESLint plugin that checks tagged template strings against a GraphQL schema
+- [x] Add jsconfig.json file to allow VSCode to give autocompletation when it can
+- [ ] Explain Project Scaffolding
+
+## Project Scaffolding

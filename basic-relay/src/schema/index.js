@@ -1,37 +1,42 @@
-import { GraphQLObjectType, GraphQLSchema, GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLList } from 'graphql';
-import TodoType from './types/todo';
-import mdb from '../../data/mdb';
+// @flow
+import { buildSchema } from 'graphql';
+import { loadSchemaFile } from '../util/index';
+import { type IMDB} from '../../data/mdb';
 
-
-const RootQueryType = new GraphQLObjectType({
-  name: 'RootQueryType',
-  fields: () => ({
-    todos: {
-      type: new GraphQLList(TodoType),
-      args: {
-        todoIdList: {
-          type: new GraphQLList(GraphQLString),
-          description: 'list of taskIds'
-        }
-      },
-      description: 'list of all todos',
-      resolve: (obj, {todoIdList}, {mPool}) => mdb(mPool).getTodosByIds(todoIdList)
+export const rootFactory = (mdb: IMDB) => ({
+  getTodos({todoIdList = []}) {
+    return mdb.getTodosByIds(todoIdList);
+  },
+  createTodo({input = {}}) {
+    if (input) {
+      return mdb.createTodo(input);
     }
-  })
-});
-
-const RootMutationType = new GraphQLObjectType({
-  name: 'RootMutationType',
-  fields: () => ({
-    incrementCounter: {
-      type: GraphQLInt,
-      resolve: (parentObj, args, {mgPool}) => { }
+    else {
+      return Promise.reject('Invalid input type');
     }
-  })
+  },
+  updateTodo({taskId, input}) {
+    if (taskId && input) {
+      return mdb.updateTodo({ ...input, taskId });
+    } else {
+      return Promise.reject('taskId or input value is invalid');
+    }
+  },
+  toggleTodo({taskId, isComplete}) {
+    if(taskId && typeof isComplete === 'boolean') {
+      return mdb.toggleTodo(taskId, isComplete);
+    }else {
+      return Promise.resolve('taskId or isComplete value is invalid');
+    }
+  }
 });
 
-const schema = new GraphQLSchema({
-  query: RootQueryType
-});
-
-export default schema;
+export default async () => {
+  try {
+    const shorthandNotationSchemaString = await loadSchemaFile('TodoSchema.gql');
+    return buildSchema(shorthandNotationSchemaString);
+  }
+  catch (e) {
+    console.error(`Uh oh an ${e}`);
+  }
+};

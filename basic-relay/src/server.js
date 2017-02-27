@@ -1,16 +1,17 @@
 // @flow
 import express from 'express';
 import GraphQLHTTP from 'express-graphql';
-import schema from './schema/';
+import schemaBuilder, { rootFactory } from './schema/index';
 import path from 'path';
 import mongoConfig from '../config/mongo';
 import { MongoClient, Logger } from 'mongodb';
 import assert from 'assert';
 import mongoBusinessLayer from '../data/mdb';
 import DataLoader from 'dataloader';
-import { loadSchemaFile } from './util/index';
+import { createSchemaJsonFile } from './util/index';
 
-import { buildSchema } from 'graphql';
+import { buildSchema, graphql } from 'graphql';
+import { introspectionQuery } from 'graphql/utilities';
 
 const PORT = process.env.PORT || 4000;
 const app = express();
@@ -26,44 +27,21 @@ MongoClient.connect(mongoConfig.url, async (err, mPool) => {
 
   const mdb = mongoBusinessLayer(mPool);
 
-  const eSchema = await loadSchemaFile('sample.gql');
-
-  console.log(eSchema);
-
-  const schemaString = buildSchema(eSchema);
-
-  const root = {
-    todos({todoIdList = []}) {
-      console.log(todoIdList);
-      return mdb.getTodosByIds(todoIdList);
-    }
-  };
-
-  // if (NODE_ENV == 'development') {
-  //   Logger.setLevel('debug');
-  //   Logger.filter('class', ['Cursor']);
-  // }
-
-  const loaders = {
-    mdb: {
-      todosByIds: mdb.getTodosByIds
-    }
-  };
+  const schema = await schemaBuilder();
 
   app.use('/graphql', (req, res) => {
     GraphQLHTTP({
-      schema: schemaString,
-      rootValue: root,
+      schema,
+      rootValue: rootFactory(mdb),
       graphiql: true,
     })(req, res);
   });
-  // app.use('/graphql', (req, res) => {
-  //   GraphQLHTTP({
-  //     schema,
-  //     graphiql: true,
-  //     context: { mPool, loaders }
-  //   })(req, res);
-  // });
+
+  if (NODE_ENV && NODE_ENV == 'development') {
+    // TODO: complete implementation
+    createSchemaJsonFile(schema).then((m) => console.log(m), (e) => console.error(e));
+
+  }
 
 });
 
