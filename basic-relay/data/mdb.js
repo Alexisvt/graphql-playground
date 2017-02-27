@@ -8,6 +8,7 @@ export interface IMDB {
   createTodo(todoItem: Object): Promise<any>;
   updateTodo(todoItem: Object): Promise<any>;
   toggleTodo(taskId: string, isComplete: boolean): Promise<any>;
+  deleteTodo(taskId: string): Promise<any>;
 }
 
 interface ITodo {
@@ -47,20 +48,43 @@ export default (mgPool: Db): IMDB => ({
   },
   async updateTodo(todoItem: ITodo) {
     if (todoItem) {
-      const response = await mgPool.collection('todos').updateOne({ 'taskId': todoItem.taskId }, { $set: { 'isComplete': todoItem.isComplete, 'name': todoItem.name } }, { upsert: true });
-      console.log(response);
-      return response;
+      const {result} = await mgPool.collection('todos').updateOne({ 'taskId': todoItem.taskId }, { $set: { 'isComplete': todoItem.isComplete, 'name': todoItem.name } }, { upsert: true });
+      if(result.n) {
+        const todos = await this.getTodosByIds([todoItem.taskId]);
+        if(todos.length) {
+          return todos[0];
+        }
+      } else {
+        return Promise.reject('could not update the task');
+      }
+      
     } else {
       return Promise.reject('Invalid Todo Item');
     }
   },
   async toggleTodo(taskId, isComplete) {
     if (taskId && typeof isComplete === 'boolean') { 
-      const response = await mgPool.collection('todos').updateOne({taskId}, {$set: {isComplete}}, {upsert: true});
-      console.log(response);
-      return response;
+      const {result} = await mgPool.collection('todos').updateOne({taskId}, {$set: {isComplete}}, {upsert: true});
+      if(result.n) {
+        const todos = await this.getTodosByIds([taskId]);
+        if(todos.length) {
+          return todos[0];
+        }
+      } else {
+        return Promise.reject('could not update the task');
+      }
+      
     } else {
       return Promise.reject('taskId or isComplete is invalid');
     }
-  }
+  },
+  async deleteTodo(taskId: string = '') {
+    if (taskId) {
+      const {result} = await mgPool.collection('todos').remove({taskId: {$eq: taskId}});
+      console.log(result);
+      return !!result.n;    
+    } else {
+      return Promise.reject('Invalid taskId value');
+    }
+  } 
 });

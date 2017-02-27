@@ -28,6 +28,13 @@ export const rootFactory = (mdb: IMDB) => ({
     }else {
       return Promise.resolve('taskId or isComplete value is invalid');
     }
+  },
+  deleteTodo({taskId}) {
+    if (taskId) {
+      return mdb.deleteTodo(taskId);
+    } else {
+      return Promise.reject('Invalid taskId value');
+    }
   }
 });
 

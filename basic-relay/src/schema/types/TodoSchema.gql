@@ -19,6 +19,7 @@ type Mutation {
   createTodo(input: TodoInput!): Todo
   updateTodo(taskId: ID!, input: TodoInput!): Todo
   toggleTodo(taskId: ID!, isComplete: Boolean!): Todo
+  deleteTodo(taskId: ID!): Boolean!
 }
 
 type Query {
