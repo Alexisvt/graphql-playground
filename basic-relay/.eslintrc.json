@@ -24,8 +24,7 @@
     },
     "plugins": [
         "react",
-        "flowtype",
-        "graphql"
+        "flowtype"
     ],
     "rules": {
         "indent": [
