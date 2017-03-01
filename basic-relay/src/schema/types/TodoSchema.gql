@@ -1,18 +1,44 @@
+interface Node {
+  id: ID!
+}
+
 interface ITodo {
-  taskId: String
+  id: ID!
   name: String
   isComplete: Boolean
 }
 
-type Todo implements ITodo {
-  taskId: String
-  name: String
-  isComplete: Boolean
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
 }
 
 input TodoInput { 
   name: String
   isComplete: Boolean
+}
+
+type Todo implements ITodo, Node {
+  id: ID!
+  name: String
+  isComplete: Boolean
+}
+
+type TodoEdge {
+  cursor: String!
+  node: Todo
+}
+
+type TodoConnection {
+  edges: [TodoEdge]
+  pageInfo: PageInfo!
+}
+
+type Store {
+  todos(todoIdList: [String]): [Todo]
+  todoConnection(first: Int, after: String, last: Int, before: String): TodoConnection
 }
 
 type Mutation {
@@ -23,5 +49,5 @@ type Mutation {
 }
 
 type Query {
-  getTodos(todoIdList: [String]): [Todo]
+  store: Store
 }

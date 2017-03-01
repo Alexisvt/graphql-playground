@@ -23,16 +23,26 @@ export default (mgPool: Db): IMDB => ({
     if (todoIds.length === 0) {
       return this.getTodos();
     }
-    const rows = await mgPool.collection('todos')
+    let rows = await mgPool.collection('todos')
       .find({ taskId: { $in: todoIds } })
       .toArray();
 
+    rows = rows.map(doc => {
+      const { taskId: id, isComplete, name } = doc;
+      return { id, isComplete, name };
+    });
+    
     return orderedFor(rows, todoIds, 'taskId', true);
   },
   async getTodos() {
-    const documents = await mgPool.collection('todos')
+    let documents = await mgPool.collection('todos')
       .find({})
       .toArray();
+
+    documents = documents.map(doc => {
+      const { taskId: id, isComplete, name } = doc;
+      return { id, isComplete, name };
+    });
 
     return documents;
   },
@@ -41,50 +51,52 @@ export default (mgPool: Db): IMDB => ({
       let todo = { ...todoItem };
       todo.taskId = (new ObjectID()).toString();
       const result = await mgPool.collection('todos').insert(todo);
-      return result.ops[0];
+      const { taskId: id, isComplete, name } = result.ops[0];
+      return { id, isComplete, name };
     } else {
       return Promise.reject('Invalid Todo item');
     }
   },
   async updateTodo(todoItem: ITodo) {
     if (todoItem) {
-      const {result} = await mgPool.collection('todos').updateOne({ 'taskId': todoItem.taskId }, { $set: { 'isComplete': todoItem.isComplete, 'name': todoItem.name } }, { upsert: true });
-      if(result.n) {
+      const { result } = await mgPool.collection('todos').updateOne({ 'taskId': todoItem.taskId }, { $set: { 'isComplete': todoItem.isComplete, 'name': todoItem.name } }, { upsert: true });
+      if (result.n) {
         const todos = await this.getTodosByIds([todoItem.taskId]);
-        if(todos.length) {
-          return todos[0];
+        if (todos.length) {
+          const { taskId: id, isComplete, name } = todos[0];
+          return { id, isComplete, name };
         }
       } else {
         return Promise.reject('could not update the task');
       }
-      
+
     } else {
       return Promise.reject('Invalid Todo Item');
     }
   },
   async toggleTodo(taskId, isComplete) {
-    if (taskId && typeof isComplete === 'boolean') { 
-      const {result} = await mgPool.collection('todos').updateOne({taskId}, {$set: {isComplete}}, {upsert: true});
-      if(result.n) {
+    if (taskId && typeof isComplete === 'boolean') {
+      const { result } = await mgPool.collection('todos').updateOne({ taskId }, { $set: { isComplete } }, { upsert: true });
+      if (result.n) {
         const todos = await this.getTodosByIds([taskId]);
-        if(todos.length) {
-          return todos[0];
+        if (todos.length) {
+          const { taskId: id, isComplete, name } = todos[0];
+          return { id, isComplete, name };
         }
       } else {
         return Promise.reject('could not update the task');
       }
-      
+
     } else {
       return Promise.reject('taskId or isComplete is invalid');
     }
   },
   async deleteTodo(taskId: string = '') {
     if (taskId) {
-      const {result} = await mgPool.collection('todos').remove({taskId: {$eq: taskId}});
-      console.log(result);
-      return !!result.n;    
+      const { result } = await mgPool.collection('todos').remove({ taskId: { $eq: taskId } });
+      return !!result.n;
     } else {
       return Promise.reject('Invalid taskId value');
     }
-  } 
+  }
 });

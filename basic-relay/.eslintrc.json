@@ -10,7 +10,8 @@
         "eslint:recommended",
         "plugin:import/errors",
         "plugin:import/warnings",
-        "plugin:flowtype/recommended"
+        "plugin:flowtype/recommended",
+        "plugin:react/recommended"
     ],
     "settings": {
         "import/resolver": "node"
@@ -32,7 +33,7 @@
             2
         ],
         "linebreak-style": [
-            "error",
+            "off",
             "windows"
         ],
         "quotes": [
@@ -47,6 +48,7 @@
             "always"
         ],
         "no-console": "warn",
-        "flowtype/require-parameter-type": "off"
+        "flowtype/require-parameter-type": "off",
+        "no-class-assign": "off"
     }
 }
