@@ -4,7 +4,7 @@
 
 ## State of the project
 
-This project is on hold, currently es failing, I won't work on this sample anymore since the problems that I found was to difficult to resolve using the method that I use for defining the schema
+This project is on hold, currently es failing, I won't work on this sample anymore since the problems that I found was to difficult to resolve using the method that I use for defining the schema.
 
 ## TODO
 
