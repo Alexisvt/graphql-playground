@@ -23331,7 +23331,7 @@ class App extends _react.Component {
       this.props.relay.setVariables({ limit });
     }, this.handleSubmit = e => {
       e.preventDefault();
-      _reactRelay2.default.Store.update(new _todo.CreateTodoMutation({
+      _reactRelay2.default.Store.commitUpdate(new _todo.CreateTodoMutation({
         name: this.state.currentTodo,
         isComplete: false,
         store: this.props.store
@@ -23380,8 +23380,8 @@ class App extends _react.Component {
           ),
           _react2.default.createElement(
             'option',
-            { value: '4' },
-            '4'
+            { value: '50' },
+            '50'
           )
         )
       )
@@ -23396,7 +23396,7 @@ App.propTypes = {
 
 App = _reactRelay2.default.createContainer(App, {
   initialVariables: {
-    limit: 2
+    limit: 50
   },
   fragments: {
     store: () => function (RQL_0) {
@@ -23758,27 +23758,120 @@ exports.CreateTodoMutation = undefined;
 
 var _reactRelay = __webpack_require__(92);
 
-class CreateTodoMutation extends _reactRelay.Mutation {
+var _reactRelay2 = _interopRequireDefault(_reactRelay);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class CreateTodoMutation extends _reactRelay2.default.Mutation {
   getMutation() {
-    return _reactRelay.QL`
-      mutation {createTodo}
-    `;
+    return function () {
+      return {
+        calls: [{
+          kind: 'Call',
+          metadata: {},
+          name: 'createTodo',
+          value: {
+            kind: 'CallVariable',
+            callVariableName: 'input'
+          }
+        }],
+        children: [{
+          fieldName: 'clientMutationId',
+          kind: 'Field',
+          metadata: {
+            isGenerated: true,
+            isRequisite: true
+          },
+          type: 'String'
+        }],
+        kind: 'Mutation',
+        metadata: {
+          inputType: 'CreateTodoInput!'
+        },
+        name: 'Todo',
+        responseType: 'CreateTodoPayload'
+      };
+    }();
   }
 
   getVariables() {
     return {
-      title: this.props.title,
-      url: this.props.url
+      name: this.props.name,
+      isComplete: this.props.isComplete
     };
   }
 
   getFatQuery() {
-    return _reactRelay.QL`
-      fragment on CreateTodoPayload {
-        todoEdge
-        store { todoConnection }
-      }
-    `;
+    return function () {
+      return {
+        children: [{
+          children: [{
+            fieldName: 'cursor',
+            kind: 'Field',
+            metadata: {
+              isGenerated: true,
+              isRequisite: true
+            },
+            type: 'String'
+          }, {
+            children: [{
+              fieldName: 'id',
+              kind: 'Field',
+              metadata: {
+                isGenerated: true,
+                isRequisite: true
+              },
+              type: 'ID'
+            }],
+            fieldName: 'node',
+            kind: 'Field',
+            metadata: {
+              canHaveSubselections: true,
+              isGenerated: true,
+              isRequisite: true
+            },
+            type: 'Todo'
+          }],
+          fieldName: 'todoEdge',
+          kind: 'Field',
+          metadata: {
+            canHaveSubselections: true
+          },
+          type: 'TodoEdge'
+        }, {
+          children: [{
+            fieldName: 'todoConnection',
+            kind: 'Field',
+            metadata: {
+              canHaveSubselections: true,
+              isConnection: true
+            },
+            type: 'TodoConnection'
+          }, {
+            fieldName: 'id',
+            kind: 'Field',
+            metadata: {
+              isGenerated: true,
+              isRequisite: true
+            },
+            type: 'ID'
+          }],
+          fieldName: 'store',
+          kind: 'Field',
+          metadata: {
+            canHaveSubselections: true,
+            inferredRootCallName: 'node',
+            inferredPrimaryKey: 'id'
+          },
+          type: 'Store'
+        }],
+        id: _reactRelay2.default.QL.__id(),
+        kind: 'Fragment',
+        metadata: {},
+        name: 'TodoRelayQL',
+        type: 'CreateTodoPayload'
+      };
+    }();
   }
 
   getConfigs() {
@@ -23793,6 +23886,17 @@ class CreateTodoMutation extends _reactRelay.Mutation {
       }
     }];
   }
+
+  // getOptimisticResponse() {
+  //   return {
+  //     linkEdge: {
+  //       node: {
+  //         title: this.props.title,
+  //         url: this.props.url
+  //       }
+  //     }
+  //   };
+  // }
 }
 exports.CreateTodoMutation = CreateTodoMutation;
 
@@ -47371,7 +47475,15 @@ HomeRoute.routeName = 'Home';
 HomeRoute.queries = {
   store: Component => function (RQL_0) {
     return {
-      children: [].concat.apply([], [_reactRelay2.default.QL.__frag(RQL_0)]),
+      children: [].concat.apply([], [{
+        fieldName: 'id',
+        kind: 'Field',
+        metadata: {
+          isGenerated: true,
+          isRequisite: true
+        },
+        type: 'ID'
+      }, _reactRelay2.default.QL.__frag(RQL_0)]),
       fieldName: 'store',
       kind: 'Query',
       metadata: {},

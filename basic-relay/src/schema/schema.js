@@ -4,11 +4,12 @@ import {
   GraphQLObjectType
 } from 'graphql';
 import { createTodoMutation } from './mutations/todo';
-import StoreType, { store } from './types/store';
+import StoreType, { store, nodeDefs } from './types/store';
 
 const QueryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
+    node: nodeDefs.nodeField,
     store: {
       type: StoreType,
       resolve: () => store

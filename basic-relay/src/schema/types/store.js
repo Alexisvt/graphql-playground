@@ -6,7 +6,9 @@ import {
 } from 'graphql';
 
 import {
+  nodeDefinitions,
   globalIdField,
+  fromGlobalId,
   connectionArgs,
   connectionFromPromisedArray
 } from 'graphql-relay';
@@ -15,7 +17,23 @@ import { TodoType, TodoConnectionType } from './todo';
 class Store {}
 export const store = new Store();
 
-export default new GraphQLObjectType({
+const nodeDefs = nodeDefinitions(
+  (globalId) => {
+    const {type} = fromGlobalId(globalId);
+    if (type === 'Store') {
+      return store;
+    }
+    return null;
+  },
+  (resolvedObj) => {
+    if(resolvedObj instanceof Store) {
+      return StoreType;
+    }
+    return null;
+  }
+);
+
+const StoreType = new GraphQLObjectType({
   name: 'Store',
   fields: () => ({
     id: globalIdField('Store'),
@@ -33,5 +51,8 @@ export default new GraphQLObjectType({
       args: connectionArgs,
       resolve: (obj, args, { mdb }: IContextObj) => connectionFromPromisedArray(mdb.getTodos(), args)
     }
-  })
+  }),
+  interfaces: [nodeDefs.nodeInterface]
 });
+
+export {StoreType as default, nodeDefs};

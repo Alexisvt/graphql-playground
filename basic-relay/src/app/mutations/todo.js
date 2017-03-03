@@ -1,21 +1,21 @@
-import { Mutation, QL } from 'react-relay';
+import Relay from 'react-relay';
 
-export class CreateTodoMutation extends Mutation {
+export class CreateTodoMutation extends Relay.Mutation {
   getMutation() {
-    return QL`
+    return Relay.QL`
       mutation {createTodo}
     `;
   }
 
   getVariables() {
     return {
-      title: this.props.title,
-      url: this.props.url
+      name: this.props.name,
+      isComplete: this.props.isComplete
     };
   }
 
   getFatQuery() {
-    return QL`
+    return Relay.QL`
       fragment on CreateTodoPayload {
         todoEdge
         store { todoConnection }
@@ -35,4 +35,15 @@ export class CreateTodoMutation extends Mutation {
       },
     }];
   }
+
+  // getOptimisticResponse() {
+  //   return {
+  //     linkEdge: {
+  //       node: {
+  //         title: this.props.title,
+  //         url: this.props.url
+  //       }
+  //     }
+  //   };
+  // }
 }

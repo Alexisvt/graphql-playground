@@ -17,7 +17,7 @@ export const createTodoMutation = mutationWithClientMutationId({
   outputFields: {
     todoEdge: {
       type: TodoConnectionType.edgeType,
-      resolve: ({ insertedId, ...todoItem }) => ({ node: todoItem, cursor: insertedId })
+      resolve: ({ _id, ...todoItem }) => ({ node: todoItem, cursor: _id })
     },
     store: {
       type: StoreType,

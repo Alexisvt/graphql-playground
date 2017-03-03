@@ -58,8 +58,8 @@ export default (mgPool: Db): IDBAccessLayer => ({
       let todo = { ...newItem };
       todo.taskId = (new ObjectID()).toString();
       const result = await mgPool.collection('todos').insert(todo);
-      const { taskId: id, insertedId, ...todoItem } = result.ops[0];
-      return { id, ...todoItem, insertedId };
+      const { taskId: id, ...todoItem } = result.ops[0];
+      return { id, ...todoItem };
     } else {
       return Promise.reject('Invalid Todo item');
     }

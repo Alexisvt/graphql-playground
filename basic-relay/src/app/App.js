@@ -25,7 +25,7 @@ class App extends Component {
 
   handleSubmit = (e: Event) => {
     e.preventDefault();
-    Relay.Store.update(new CreateTodoMutation({
+    Relay.Store.commitUpdate(new CreateTodoMutation({
       name: this.state.currentTodo,
       isComplete: false,
       store: this.props.store
@@ -55,7 +55,7 @@ class App extends Component {
       <div>
         <select onChange={this.setLimit} defaultValue={this.props.relay.variables.limit}>
           <option value="2">2</option>
-          <option value="4">4</option>
+          <option value="50">50</option>
         </select>
       </div>
     </div>);
@@ -64,7 +64,7 @@ class App extends Component {
 
 App = Relay.createContainer(App, {
   initialVariables: {
-    limit: 2
+    limit: 50
   },
   fragments: {
     store: () => Relay.QL`
