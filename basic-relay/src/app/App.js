@@ -4,23 +4,14 @@ import Relay from 'react-relay';
 import logo from './logo.svg';
 import './App.css';
 import { addTodo, generatedId, findById, toggleTodo, updateTodo } from './lib/todoHelpers';
-
-import TodoList from './components/todo/TodoList';
-import TodoItem from './components/todo/TodoItem';
-
-export interface ITodo {
-  id: string;
-  name: string;
-  isComplete: boolean;
-}
-
-interface IAppState {
-  todos: ITodo[],
-  currentTodo: string;
-  errorMessage?: string;
-}
+import { CreateTodoMutation } from './mutations/todo';
+import { TodoItem, TodoForm, TodoList } from './components/todo';
 
 class App extends Component {
+
+  state = {
+    currentTodo: ''
+  };
 
   static propTypes = {
     store: PropTypes.object,
@@ -32,6 +23,22 @@ class App extends Component {
     this.props.relay.setVariables({ limit });
   };
 
+  handleSubmit = (e: Event) => {
+    e.preventDefault();
+    Relay.Store.update(new CreateTodoMutation({
+      name: this.state.currentTodo,
+      isComplete: false,
+      store: this.props.store
+    }));
+    this.setState({ currentTodo: '' });
+  }
+
+  handleInputChange = (e: Event) => {
+    if (e.target instanceof HTMLInputElement) {
+      this.setState({ currentTodo: e.target.value });
+    }
+  }
+
   render() {
     return (<div className='App'>
       <div className="App-header">
@@ -39,6 +46,10 @@ class App extends Component {
         <h2>React Todos</h2>
       </div>
       <div className='Todo-App'>
+        <TodoForm
+          currentTodo={this.state.currentTodo}
+          handleInputChange={this.handleInputChange}
+          handleSubmit={this.handleSubmit} />
         <TodoList edges={this.props.store.todoConnection.edges}></TodoList>
       </div>
       <div>
@@ -58,6 +69,7 @@ App = Relay.createContainer(App, {
   fragments: {
     store: () => Relay.QL`
       fragment on Store {
+        id
         todoConnection(first: $limit) {
           edges {
             node {

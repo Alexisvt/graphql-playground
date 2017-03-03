@@ -2,23 +2,7 @@
 import { Db, ObjectID } from 'mongodb';
 import { orderedFor } from '../src/util/index';
 
-export interface IMDB {
-  getTodosByIds(todosIds: any[]): Promise<any>;
-  getTodos(): Promise<any>;
-  createTodo(todoItem: Object): Promise<any>;
-  createTodoRelay(todoItem: Object): Promise<any>;
-  updateTodo(todoItem: Object): Promise<any>;
-  toggleTodo(taskId: string, isComplete: boolean): Promise<any>;
-  deleteTodo(taskId: string): Promise<any>;
-}
-
-interface ITodo {
-  taskId: string;
-  name: string;
-  isComplete: boolean;
-}
-
-export default (mgPool: Db): IMDB => ({
+export default (mgPool: Db): IDBAccessLayer => ({
   async getTodosByIds(todoIds: ITodo[] = []) {
 
     if (todoIds.length === 0) {
@@ -29,15 +13,15 @@ export default (mgPool: Db): IMDB => ({
       .toArray();
 
     rows = rows.map(doc => {
-      const { taskId: id, isComplete, name } = doc;
-      return { id, isComplete, name };
+      const { taskId: id, ...todoItem } = doc;
+      return { ...todoItem, id };
     });
 
     return orderedFor(rows, todoIds, 'taskId', true);
   },
   async getTodos(numDoc = 0) {
 
-    let documents; 
+    let documents;
 
     if (numDoc) {
       documents = await mgPool.collection('todos')
@@ -52,42 +36,42 @@ export default (mgPool: Db): IMDB => ({
     }
 
     documents = documents.map(doc => {
-      const { taskId: id, isComplete, name } = doc;
-      return { id, isComplete, name };
+      const { taskId: id, ...todoItem } = doc;
+      return { ...todoItem, id };
     });
 
     return documents;
   },
-  async createTodo(todoItem: ITodo) {
-    if (todoItem) {
-      let todo = { ...todoItem };
+  async createTodo(newItem: ITodo) {
+    if (newItem) {
+      let todo = { ...newItem };
       todo.taskId = (new ObjectID()).toString();
       const result = await mgPool.collection('todos').insert(todo);
-      const { taskId: id, isComplete, name } = result.ops[0];
-      return { id, isComplete, name };
+      const { taskId: id, ...todoItem } = result.ops[0];
+      return {...todoItem,  id };
     } else {
       return Promise.reject('Invalid Todo item');
     }
   },
-  async createTodoRelay(todoItem: ITodo) {
-    if (todoItem) {
-      let todo = { ...todoItem };
+  async createTodoRelay(newItem: ITodo) {
+    if (newItem) {
+      let todo = { ...newItem };
       todo.taskId = (new ObjectID()).toString();
       const result = await mgPool.collection('todos').insert(todo);
-      const { taskId: id, isComplete, name, insertedId } = result.ops[0];
-      return { id, isComplete, name, insertedId };
+      const { taskId: id, insertedId, ...todoItem } = result.ops[0];
+      return { id, ...todoItem, insertedId };
     } else {
       return Promise.reject('Invalid Todo item');
     }
   },
   async updateTodo(todoItem: ITodo) {
     if (todoItem) {
-      const { result } = await mgPool.collection('todos').updateOne({ 'taskId': todoItem.taskId }, { $set: { 'isComplete': todoItem.isComplete, 'name': todoItem.name } }, { upsert: true });
+      const { result } = await mgPool.collection('todos').updateOne({ 'taskId': todoItem.id }, { $set: { 'isComplete': todoItem.isComplete, 'name': todoItem.name } }, { upsert: true });
       if (result.n) {
-        const todos = await this.getTodosByIds([todoItem.taskId]);
+        const todos = await this.getTodosByIds([todoItem.id]);
         if (todos.length) {
-          const { taskId: id, isComplete, name } = todos[0];
-          return { id, isComplete, name };
+          const { taskId: id, ...todoItem } = todos[0];
+          return { id, ...todoItem };
         }
       } else {
         return Promise.reject('could not update the task');
@@ -103,8 +87,8 @@ export default (mgPool: Db): IMDB => ({
       if (result.n) {
         const todos = await this.getTodosByIds([taskId]);
         if (todos.length) {
-          const { taskId: id, isComplete, name } = todos[0];
-          return { id, isComplete, name };
+          const { taskId: id, ...todoItem } = todos[0];
+          return { id, ...todoItem };
         }
       } else {
         return Promise.reject('could not update the task');

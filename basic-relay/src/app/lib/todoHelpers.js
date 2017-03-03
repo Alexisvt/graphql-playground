@@ -1,5 +1,3 @@
-import { type ITodo } from '../App';
-
 export const addTodo = (list: ITodo[], ...newTodo: ITodo[]) => [...list, ...newTodo];
 
 export const generatedId = () => Math.floor(Math.random() * 100000);

@@ -1,14 +1,8 @@
 // @flow
 import React, { PropTypes } from 'react';
-import { type ITodo } from '../../App';
-import TodoItem from './TodoItem';
+import { TodoItem } from './TodoItem';
 
-interface ITodoListProps {
-  node: ITodo[];
-  handleToggle?: (taskId: string) => void;
-}
-
-let TodoList = ({edges = []}) => {
+export let TodoList = ({ edges = [] }) => {
   return (
     <div className="Todo-List">
       <ul>
@@ -26,5 +20,3 @@ TodoList.propTypes = {
   edges: PropTypes.array.isRequired,
   handleToggle: PropTypes.func
 };
-
-export default TodoList;

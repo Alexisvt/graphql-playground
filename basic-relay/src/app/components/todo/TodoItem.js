@@ -1,14 +1,8 @@
 // @flow
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import { type ITodo } from '../../App';
 
-interface ITodoItem {
-  todo: ITodo;
-  handleToggle?: (id: string) => void
-}
-
-let TodoItem = ({todo, handleToggle = () => { }}: ITodoItem) => {
+export let TodoItem = ({todo, handleToggle = () => { }}: ITodoItem) => {
 
   const {isComplete, name, id} = todo;
   
@@ -35,5 +29,3 @@ TodoItem = Relay.createContainer(TodoItem, {
     `
   }
 });
-
-export default TodoItem;

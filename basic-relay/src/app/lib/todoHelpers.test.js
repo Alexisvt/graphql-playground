@@ -1,6 +1,5 @@
 // @flow
 import { addTodo, findById, toggleTodo, updateTodo } from './todoHelpers';
-import { type ITodo } from '../App';
 
 declare var test: typeof it;
 declare var expect: (value: any) => JestExpectType;
