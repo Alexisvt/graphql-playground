@@ -31,7 +31,7 @@ export class CreateTodoMutation extends Relay.Mutation {
       connectionName: 'todoConnection',
       edgeName: 'todoEdge',
       rangeBehaviors: {
-        '': 'append',
+        '': 'prepend',
       },
     }];
   }

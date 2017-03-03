@@ -6,6 +6,7 @@ declare interface ITodo {
   id: string;
   name: string;
   isComplete: boolean;
+  createdAt: string;
 }
 
 declare interface IAppState {

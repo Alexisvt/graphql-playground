@@ -10,6 +10,7 @@ export default (mgPool: Db): IDBAccessLayer => ({
     }
     let rows = await mgPool.collection('todos')
       .find({ taskId: { $in: todoIds } })
+      .sort({createdAt: -1})
       .toArray();
 
     rows = rows.map(doc => {
@@ -26,12 +27,14 @@ export default (mgPool: Db): IDBAccessLayer => ({
     if (numDoc) {
       documents = await mgPool.collection('todos')
         .find({})
+        .sort({createdAt: -1})
         .limit(numDoc)
         .toArray();
 
     } else {
       documents = await mgPool.collection('todos')
         .find({})
+        .sort({createdAt: -1})
         .toArray();
     }
 

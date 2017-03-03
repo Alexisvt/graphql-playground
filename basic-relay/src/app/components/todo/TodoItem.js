@@ -1,14 +1,14 @@
 // @flow
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
+import moment from 'moment';
 
 export let TodoItem = ({todo, handleToggle = () => { }}: ITodoItem) => {
 
-  const {isComplete, name, id} = todo;
-  
+  const {isComplete, name, id, createdAt} = todo;
   return (
     <li>
-      <input checked={isComplete} onChange={() => handleToggle(id)} type="checkbox" /> Learn {name}
+      <input checked={isComplete} onChange={() => handleToggle(id)} type="checkbox" />Created Date: {moment(createdAt).format('L')}, Todo task: {name}
     </li>
   );
 };
@@ -24,7 +24,8 @@ TodoItem = Relay.createContainer(TodoItem, {
       fragment on Todo {
         id
         name
-        isComplete
+        isComplete,
+        createdAt
       }
     `
   }

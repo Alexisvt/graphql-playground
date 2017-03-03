@@ -21,6 +21,10 @@ export const TodoType = new GraphQLObjectType({
     },
     isComplete: {
       type: new GraphQLNonNull(GraphQLBoolean)
+    },
+    createdAt: {
+      type: GraphQLString,
+      resolve: (obj) => new Date(obj.createdAt).toISOString()
     }
   })
 });

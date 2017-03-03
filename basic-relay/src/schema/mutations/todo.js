@@ -24,5 +24,5 @@ export const createTodoMutation = mutationWithClientMutationId({
       resolve: () => store
     }
   },
-  mutateAndGetPayload: (inputObj, { mdb }: IContextObj) => mdb.createTodoRelay(inputObj)
+  mutateAndGetPayload: ({name, isComplete, createdAt = Date.now()}, { mdb }: IContextObj) => mdb.createTodoRelay({name, isComplete, createdAt})
 });
