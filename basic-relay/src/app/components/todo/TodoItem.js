@@ -3,12 +3,18 @@ import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
 import moment from 'moment';
 
-export let TodoItem = ({todo, handleToggle = () => { }}: ITodoItem) => {
+export let TodoItem = ({ todo, relay, handleToggle = () => { } }: ITodoItem) => {
 
-  const {isComplete, name, id, createdAt} = todo;
+  const { isComplete, name, id, createdAt } = todo;
+  const dateLabel = () => {
+    if (relay && relay.hasOptimisticUpdate(todo)) {
+      return 'Saving...';
+    }
+    return moment(createdAt).format('L');
+  };
   return (
     <li>
-      <input checked={isComplete} onChange={() => handleToggle(id)} type="checkbox" />Created Date: {moment(createdAt).format('L')}, Todo task: {name}
+      <input checked={isComplete} onChange={() => handleToggle(id)} type="checkbox" />Created Date: {dateLabel()}, Todo task: {name}
     </li>
   );
 };
@@ -24,7 +30,7 @@ TodoItem = Relay.createContainer(TodoItem, {
       fragment on Todo {
         id
         name
-        isComplete,
+        isComplete
         createdAt
       }
     `

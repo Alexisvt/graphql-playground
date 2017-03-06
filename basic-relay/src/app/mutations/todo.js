@@ -36,14 +36,14 @@ export class CreateTodoMutation extends Relay.Mutation {
     }];
   }
 
-  // getOptimisticResponse() {
-  //   return {
-  //     linkEdge: {
-  //       node: {
-  //         title: this.props.title,
-  //         url: this.props.url
-  //       }
-  //     }
-  //   };
-  // }
+  getOptimisticResponse() {
+    return {
+      todoEdge: {
+        node: {
+          name: this.props.name,
+          isComplete: this.props.isComplete
+        }
+      }
+    };
+  }
 }

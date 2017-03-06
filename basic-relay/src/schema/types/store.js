@@ -48,8 +48,8 @@ const StoreType = new GraphQLObjectType({
     },
     todoConnection: {
       type: TodoConnectionType.connectionType,
-      args: connectionArgs,
-      resolve: (obj, args, { mdb }: IContextObj) => connectionFromPromisedArray(mdb.getTodos(), args)
+      args: {...connectionArgs, query: { type: GraphQLString }},
+      resolve: (obj, {query, ...args}, { mdb }: IContextObj) => connectionFromPromisedArray(mdb.getTodosRelay(query), args)
     }
   }),
   interfaces: [nodeDefs.nodeInterface]

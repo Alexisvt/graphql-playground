@@ -28,7 +28,8 @@ declare interface ITodoFormProps {
 
 declare interface IDBAccessLayer {
   getTodosByIds(todosIds: any[]): Promise<any>;
-  getTodos(): Promise<any>;
+  getTodos(limit?: number): Promise<any>;
+  getTodosRelay(query?: string): Promise<any>;
   createTodo(todoItem: Object): Promise<any>;
   createTodoRelay(todoItem: Object): Promise<any>;
   updateTodo(todoItem: Object): Promise<any>;

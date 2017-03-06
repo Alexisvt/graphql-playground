@@ -5,7 +5,8 @@ import logo from './logo.svg';
 import './App.css';
 import { addTodo, generatedId, findById, toggleTodo, updateTodo } from './lib/todoHelpers';
 import { CreateTodoMutation } from './mutations/todo';
-import { TodoItem, TodoForm, TodoList } from './components/todo';
+import { TodoItem, TodoForm, TodoList, SearchBox } from './components/todo';
+import { debounce } from 'lodash';
 
 class App extends Component {
 
@@ -16,6 +17,11 @@ class App extends Component {
   static propTypes = {
     store: PropTypes.object,
     relay: PropTypes.object
+  }
+
+  constructor(props) {
+    super(props);
+    this.handleSearchChange = debounce(this.handleSearchChange, 300);
   }
 
   setLimit = (e) => {
@@ -39,6 +45,12 @@ class App extends Component {
     }
   }
 
+  handleSearchChange = (e: Event) => {
+    if (e.target instanceof HTMLInputElement) {
+      this.props.relay.setVariables({ query: e.target.value });
+    }
+  }
+
   render() {
     return (<div className='App'>
       <div className="App-header">
@@ -46,6 +58,7 @@ class App extends Component {
         <h2>React Todos</h2>
       </div>
       <div className='Todo-App'>
+        <SearchBox onChangeHandler={this.handleSearchChange} />
         <TodoForm
           currentTodo={this.state.currentTodo}
           handleInputChange={this.handleInputChange}
@@ -64,13 +77,14 @@ class App extends Component {
 
 App = Relay.createContainer(App, {
   initialVariables: {
-    limit: 50
+    limit: 50,
+    query: ''
   },
   fragments: {
     store: () => Relay.QL`
       fragment on Store {
         id
-        todoConnection(first: $limit) {
+        todoConnection(first: $limit, query: $query) {
           edges {
             node {
               id

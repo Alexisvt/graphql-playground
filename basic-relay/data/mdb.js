@@ -10,7 +10,7 @@ export default (mgPool: Db): IDBAccessLayer => ({
     }
     let rows = await mgPool.collection('todos')
       .find({ taskId: { $in: todoIds } })
-      .sort({createdAt: -1})
+      .sort({ createdAt: -1 })
       .toArray();
 
     rows = rows.map(doc => {
@@ -20,23 +20,43 @@ export default (mgPool: Db): IDBAccessLayer => ({
 
     return orderedFor(rows, todoIds, 'taskId', true);
   },
-  async getTodos(numDoc = 0) {
+  async getTodos(limit = 0) {
 
     let documents;
 
-    if (numDoc) {
+    if (limit) {
       documents = await mgPool.collection('todos')
         .find({})
-        .sort({createdAt: -1})
-        .limit(numDoc)
+        .sort({ createdAt: -1 })
+        .limit(limit)
         .toArray();
 
     } else {
       documents = await mgPool.collection('todos')
         .find({})
-        .sort({createdAt: -1})
+        .sort({ createdAt: -1 })
         .toArray();
     }
+
+    documents = documents.map(doc => {
+      const { taskId: id, ...todoItem } = doc;
+      return { ...todoItem, id };
+    });
+
+    return documents;
+  },
+  async getTodosRelay(query = '') {
+    
+    let findParams = {};
+
+    if (query) {
+      findParams.name = new RegExp(query, 'i');  
+    }
+
+    let documents = await mgPool.collection('todos')
+      .find(findParams)
+      .sort({ createdAt: -1 })
+      .toArray();
 
     documents = documents.map(doc => {
       const { taskId: id, ...todoItem } = doc;
@@ -51,7 +71,7 @@ export default (mgPool: Db): IDBAccessLayer => ({
       todo.taskId = (new ObjectID()).toString();
       const result = await mgPool.collection('todos').insert(todo);
       const { taskId: id, ...todoItem } = result.ops[0];
-      return {...todoItem,  id };
+      return { ...todoItem, id };
     } else {
       return Promise.reject('Invalid Todo item');
     }
