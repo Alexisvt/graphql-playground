@@ -33,13 +33,13 @@ class TodoList extends Component {
     store: PropTypes.object
   };
 
-  createDataSource = ({ todos: todoList = [] }) => {
+  createDataSource = (todos = []) => {
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
 
-    if (todoList && todoList.length > 0) {
-      this.dataSource = ds.cloneWithRows(todoList);
+    if (todos && todos.length > 0) {
+      this.dataSource = ds.cloneWithRows(todos);
     } else {
       console.error('No items on the list');
     }
@@ -47,10 +47,16 @@ class TodoList extends Component {
   }
 
   handleItemClick = (todoItem: ITodo) => {
+    const { name } = todoItem;
+    console.log(`The item clicked was: ${JSON.stringify(todoItem, null, 2)}`);
+    console.log(`The item's name is: ${ name }`);
     this.setState({ text: todoItem.name });
   }
 
   onRenderRow = (todoItem: ITodo) => {
+
+    console.log(`onRenderRow item value: ${todoItem.name}`);
+
     return (
       <TouchableOpacity onPress={() => this.handleItemClick(todoItem)} >
         <TodoItem todo={todoItem} />
@@ -59,8 +65,9 @@ class TodoList extends Component {
   }
 
   render() {
+    const { todos = [] } = this.props.store;
 
-    this.createDataSource(this.props.store);
+    this.createDataSource(todos);
 
     return (
       <Card >
@@ -74,8 +81,9 @@ class TodoList extends Component {
           />
         </CardSection>
         <TodoItemList
+          dataSource={this.dataSource}
           onRenderRow={this.onRenderRow}
-          dataSource={this.dataSource} />
+        />
       </Card>
     );
   }
@@ -85,7 +93,9 @@ TodoList = Relay.createContainer(TodoList, {
   fragments: {
     store: () => Relay.QL`
       fragment on Store {
-        ${TodoItem.getFragment('todo')}
+        todos {
+          ${TodoItem.getFragment('todo')}
+        }
       }
     `
   }

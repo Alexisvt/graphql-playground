@@ -9,8 +9,6 @@ class ShowStoreId extends Component {
   }
 
   render() {
-    // const { id } = this.props.relay.store;
-    // console.log(this.props.store.id);
     const { id, todos } = this.props.store;
     const texts = todos.map((todo) => (
       <Text key={todo.id}>Todo name: {todo.name} </Text>

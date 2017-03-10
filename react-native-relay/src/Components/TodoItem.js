@@ -4,6 +4,7 @@ import { Text } from 'react-native';
 import { CardSection } from './CardSection';
 import { IconButton } from './IconButton';
 import Relay from 'react-relay';
+import moment from 'moment';
 
 interface ITodoItemProps {
   todo: Object;
@@ -18,7 +19,7 @@ export let TodoItem = ({ todo, relay, handleRemoveButton }: ITodoItemProps) => {
 
   return (
     <CardSection styles={{ justifyContent: 'space-between', flex: 1 }}>
-      <Text style={{ flex: 1, textDecorationLine: decoration }} >Creation Date: {createdAt} | Task name: {name}</Text>
+      <Text style={{ flex: 1, textDecorationLine: decoration }} >Date: {moment(createdAt).format('L')} | Name: {name}</Text>
       <IconButton onPress={handleRemoveButton} iconName="close-o" iconColor="#F39C12" iconStyle={{ fontSize: 30, alignSelf: 'center' }} />
     </CardSection>
   );
