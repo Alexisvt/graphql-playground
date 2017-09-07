@@ -1,7 +1,10 @@
 import { GraphQLOptions } from 'apollo-server-core';
+import { getSchemaObject } from './Schema';
 
-const graphQLOptions: GraphQLOptions = {
-  schema
-};
-
-export default graphQLOptions;
+export async function getGraphQLOptions() {
+  const schema = await getSchemaObject();
+  const graphQLOption: GraphQLOptions = {
+    schema,
+  };
+  return graphQLOption;
+}

@@ -10,13 +10,14 @@ const posts = [
   { id: 3, authorId: 2, title: 'Advanced GraphQL', votes: 1 },
   { id: 4, authorId: 3, title: 'Launchpad is Cool', votes: 7 },
 ];
-const resolvers = {
+
+export const resolvers = {
   Author: {
-    posts: ({ id }) => posts.filter((p) => p.authorId === id),
+    posts: ({ id }) => posts.filter(p => p.authorId === id),
   },
   Mutation: {
     upvotePost: (_, { postId }) => {
-      const post = posts.find((p) => p.id === postId);
+      const post = posts.find(p => p.id === postId);
       if (!post) {
         throw new Error(`Couldn't find post with id ${postId}`);
       }
@@ -25,11 +26,10 @@ const resolvers = {
     },
   },
   Post: {
-    author: ({ authorId }) => authors.find((a) => a.id === authorId),
+    author: ({ authorId }) => authors.find(a => a.id === authorId),
   },
   Query: {
-    author: (_, { id }) => posts.find((a) => a.id === id),
+    author: (_, { id }) => posts.find(a => a.id === id),
     posts: () => posts,
   },
-
 };

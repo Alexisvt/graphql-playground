@@ -1,16 +1,18 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-export const loadSchemaFile = (schemaName = '', isQuery = true) => {
-  return new Promise((resolve, reject) => {
-
+export function loadSchemaFile(schemaName = '', isQuery = true) {
+  return new Promise<string>((resolve, reject) => {
     if (schemaName) {
-
-      const pathToResolve = path.resolve('schemas', isQuery ? 'types' : '', schemaName);
+      const pathToResolve = path.resolve(
+        'schemas',
+        isQuery ? 'types' : '',
+        schemaName,
+      );
 
       fs.readFile(pathToResolve, 'utf8', (err, data) => {
         if (err) {
-          return reject(err);
+          return reject(err.message);
         }
         return resolve(data);
       });
@@ -18,5 +20,4 @@ export const loadSchemaFile = (schemaName = '', isQuery = true) => {
       return reject('Invalid schemaName');
     }
   });
-
-};
+}
