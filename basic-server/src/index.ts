@@ -5,7 +5,7 @@ import { graphiqlExpress, graphqlExpress } from 'graphql-server-express';
 import { getGraphQLOptions } from './Data/SampleModel';
 
 const app = express();
-const PORT = 5687;
+const PORT = 8999;
 
 app.use(
   '/graphql',
@@ -23,5 +23,5 @@ app.use(
 );
 
 app.listen(PORT, () => {
-  console.log(`listening port: http://locahost:${PORT}`);
+  console.log(`listening port: http://localhost:${PORT}/graphiql`);
 });

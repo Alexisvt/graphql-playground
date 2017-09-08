@@ -15,7 +15,8 @@
     "express": "^4.15.4",
     "graphql": "^0.11.2",
     "graphql-server-express": "^1.1.2",
-    "graphql-tools": "^1.2.2"
+    "graphql-tools": "^1.2.2",
+    "tslib": "^1.7.1"
   },
   "devDependencies": {
     "@playlyfe/gql": "^2.3.2",
