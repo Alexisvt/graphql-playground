@@ -29,7 +29,7 @@ export const resolvers = {
     author: ({ authorId }) => authors.find(a => a.id === authorId),
   },
   Query: {
-    author: (_, { id }) => posts.find(a => a.id === id),
+    author: (_, { id }) => authors.find(a => a.id === id),
     posts: () => posts,
   },
 };
