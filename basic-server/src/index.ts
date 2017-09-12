@@ -5,7 +5,7 @@ import { graphiqlExpress, graphqlExpress } from 'graphql-server-express';
 import { getGraphQLOptions } from './Data/SampleModel';
 
 const app = express();
-const PORT = 8999;
+const PORT = 2144;
 
 app.use(
   '/graphql',
