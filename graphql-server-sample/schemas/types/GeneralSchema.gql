@@ -1,0 +1,20 @@
+type CompanyType {
+  id: String
+  name: String
+  description: String
+}
+
+type UserType {
+  id: String
+  firstName: String
+  age: Int
+  company: CompanyType
+}
+
+type Query {
+  user(id: String!): UserType
+}
+
+# type Mutation {
+#   upvotePost(postId: Int!): Post
+# }
