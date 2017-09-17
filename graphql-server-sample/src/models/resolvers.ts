@@ -1,5 +1,5 @@
-import { ICompany } from './resolvers';
 import axios from 'axios';
+import { ICompany } from './resolvers';
 
 export interface ICompany {
   id: string;
