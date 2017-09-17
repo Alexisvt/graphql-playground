@@ -2,6 +2,7 @@ type CompanyType {
   id: String
   name: String
   description: String
+  users: [UserType]
 }
 
 type UserType {
