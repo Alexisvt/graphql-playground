@@ -13,6 +13,7 @@ type UserType {
 
 type Query {
   user(id: String!): UserType
+  company(id: String): CompanyType
 }
 
 # type Mutation {

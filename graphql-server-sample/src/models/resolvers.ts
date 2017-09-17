@@ -19,6 +19,10 @@ export const resolvers = {
       const { data } = await axios.get(`http://localhost:3000/users/${id}`);
       return data;
     },
+    async company(_: any, { id }: { id: string }) {
+      const { data } = await axios.get(`http://localhost:3000/companies/${id}`);
+      return data;
+    },
   },
   UserType: {
     company: async (obj: IUser) => {
