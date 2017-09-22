@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { ICompany } from './resolvers';
 
 export interface ICompany {
   id: string;
@@ -21,6 +20,37 @@ export const resolvers = {
         `http://localhost:3000/companies/${obj.id}/users`,
       );
       return data;
+    },
+  },
+  Mutation: {
+    async addUser(
+      parentValue: object,
+      {
+        firstName,
+        age,
+        companyId,
+      }: { firstName: string; age: number; companyId: string },
+    ) {
+      const { data } = await axios.post('http://localhost:3000/users', {
+        age,
+        firstName,
+      });
+
+      return data;
+    },
+    async deleteUser(parentValue: object, { id: userId }: { id: string }) {
+      let response = '';
+      const { data, status } = await axios.delete(
+        `http://localhost:3000/users/${userId}`,
+      );
+
+      if (status === 200) {
+        response = 'The user was deleted successfully';
+      } else {
+        response = 'something bad happened!';
+      }
+
+      return response;
     },
   },
   Query: {

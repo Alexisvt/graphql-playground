@@ -17,6 +17,7 @@ type Query {
   company(id: String): CompanyType
 }
 
-# type Mutation {
-#   upvotePost(postId: Int!): Post
-# }
+type Mutation {
+  addUser(firstName: String!, age: Int!, companyId: String): UserType
+  deleteUser(id: String!): String
+}
